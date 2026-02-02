@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Nest Mock API Playground</title>
+  <style>
+    :root { color-scheme: light; }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      min-height: 100vh;
+      display: flex;
+      align-items: stretch;
+      justify-content: center;
+      background: radial-gradient(circle at 20% 20%, #f8f9fb 0, #e8ecf3 35%, #dfe7f3 70%);
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      color: #0f172a;
+      padding: 32px;
+    }
+    .shell {
+      width: min(1100px, 100%);
+      background: white;
+      border-radius: 16px;
+      box-shadow: 0 20px 55px rgba(15, 23, 42, 0.18);
+      padding: 28px 28px 12px;
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 24px;
+    }
+    .header {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+      border-bottom: 1px solid #e2e8f0;
+      padding-bottom: 12px;
+    }
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      border-radius: 999px;
+      background: #e0f2fe;
+      color: #0369a1;
+      font-weight: 700;
+      font-size: 0.95rem;
+      letter-spacing: 0.2px;
+    }
+    h1 {
+      margin: 0;
+      font-size: 1.8rem;
+      letter-spacing: -0.2px;
+    }
+    p { margin: 6px 0 0; color: #334155; }
+    form {
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      border-radius: 12px;
+      padding: 14px 16px;
+      display: grid;
+      gap: 10px;
+    }
+    .forms { display: grid; gap: 14px; }
+    label { font-weight: 600; font-size: 0.93rem; color: #0f172a; }
+    input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 10px;
+      border: 1px solid #cbd5e1;
+      font: inherit;
+      background: white;
+    }
+    .row { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 10px; }
+    .submit {
+      justify-self: start;
+      padding: 11px 18px;
+      border-radius: 10px;
+      border: none;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: white;
+      font-weight: 700;
+      cursor: pointer;
+      box-shadow: 0 10px 30px rgba(37, 99, 235, 0.3);
+      transition: transform 120ms ease, box-shadow 120ms ease;
+    }
+    .submit:hover { transform: translateY(-1px); box-shadow: 0 14px 34px rgba(37, 99, 235, 0.35); }
+    code {
+      background: #e2e8f0;
+      padding: 2px 6px;
+      border-radius: 6px;
+      font-size: 0.95rem;
+    }
+    .panel {
+      border: 1px dashed #cbd5e1;
+      border-radius: 12px;
+      padding: 14px 16px;
+      background: #f8fafc;
+      height: 100%;
+      display: grid;
+      grid-template-rows: auto 1fr;
+      gap: 8px;
+    }
+    .panel h3 { margin: 0; font-size: 1.02rem; }
+    pre {
+      margin: 0;
+      background: #0f172a;
+      color: #e2e8f0;
+      border-radius: 10px;
+      padding: 14px;
+      overflow: auto;
+      min-height: 140px;
+      font-size: 0.95rem;
+    }
+    @media (max-width: 900px) {
+      .shell { grid-template-columns: 1fr; padding: 22px; }
+    }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="header">
+      <div>
+        <div class="badge">⚡ Nest Mock API</div>
+        <h1>Руты и формы</h1>
+        <p>Отправляй запросы прямо отсюда. Все поля — минимально необходимые.</p>
+      </div>
+      <div>
+        <code>public/test/index.html</code>
+      </div>
+    </header>
+
+    <section class="forms">
+      <form id="root-get">
+        <label>GET /</label>
+        <button type="submit" class="submit">Запросить</button>
+      </form>
+
+      <form id="users-get-all">
+        <label>GET /users</label>
+        <button type="submit" class="submit">Получить всех</button>
+      </form>
+
+      <form id="users-get-one">
+        <label>GET /users/:id</label>
+        <div class="row">
+          <input name="id" type="number" placeholder="id" required />
+        </div>
+        <button type="submit" class="submit">Получить</button>
+      </form>
+
+      <form id="users-create">
+        <label>POST /users</label>
+        <div class="row">
+          <input name="email" type="email" placeholder="email" required />
+          <input name="password" type="password" placeholder="password" required />
+          <input name="name" type="text" placeholder="name" />
+          <input name="age" type="number" placeholder="age" min="0" />
+        </div>
+        <button type="submit" class="submit">Создать</button>
+      </form>
+
+      <form id="users-update">
+        <label>PATCH /users/:id</label>
+        <div class="row">
+          <input name="id" type="number" placeholder="id" required />
+          <input name="name" type="text" placeholder="name (optional)" />
+          <input name="age" type="number" placeholder="age (optional)" min="0" />
+          <input name="email" type="email" placeholder="email (optional)" />
+          <input name="password" type="password" placeholder="password (optional)" />
+        </div>
+        <button type="submit" class="submit">Обновить</button>
+      </form>
+
+      <form id="users-delete">
+        <label>DELETE /users/:id</label>
+        <div class="row">
+          <input name="id" type="number" placeholder="id" required />
+        </div>
+        <button type="submit" class="submit">Удалить</button>
+      </form>
+    </section>
+
+    <aside class="panel">
+      <h3>Ответ сервера</h3>
+      <pre id="output">—</pre>
+    </aside>
+  </main>
+
+  <script>
+    const output = document.getElementById('output');
+
+    const show = (data) => {
+      output.textContent = typeof data === 'string'
+        ? data
+        : JSON.stringify(data, null, 2);
+    };
+
+    const handle = (form, method, path, bodyBuilder) => {
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const formData = new FormData(form);
+        const body = bodyBuilder ? bodyBuilder(formData) : null;
+        const opts = { method, headers: { 'Content-Type': 'application/json' } };
+        if (body) opts.body = JSON.stringify(body);
+
+        const url = path instanceof Function ? path(formData) : path;
+
+        try {
+          const res = await fetch(url, opts);
+          const text = await res.text();
+          try { show(JSON.parse(text)); } catch { show(text); }
+        } catch (err) {
+          show(err.message || err);
+        }
+      });
+    };
+
+    handle(document.getElementById('root-get'), 'GET', '/');
+    handle(document.getElementById('users-get-all'), 'GET', '/users');
+    handle(document.getElementById('users-get-one'), 'GET', (fd) => `/users/${fd.get('id')}`);
+    handle(document.getElementById('users-create'), 'POST', '/users', (fd) => ({
+      email: fd.get('email'),
+      password: fd.get('password'),
+      name: fd.get('name') || undefined,
+      age: fd.get('age') ? Number(fd.get('age')) : undefined,
+    }));
+    handle(document.getElementById('users-update'), 'PATCH', (fd) => `/users/${fd.get('id')}`, (fd) => ({
+      name: fd.get('name') || undefined,
+      age: fd.get('age') ? Number(fd.get('age')) : undefined,
+      email: fd.get('email') || undefined,
+      password: fd.get('password') || undefined,
+    }));
+    handle(document.getElementById('users-delete'), 'DELETE', (fd) => `/users/${fd.get('id')}`);
+  </script>
+</body>
+</html>
