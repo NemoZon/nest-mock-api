@@ -1,26 +1,47 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { User } from './entities/user.entity';
+import { InjectModel } from '@nestjs/sequelize';
 
 @Injectable()
 export class UsersService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(@InjectModel(User) private UserRepository: typeof User) {}
+  async create(createUserDto: CreateUserDto) {
+    const user = await this.UserRepository.create(createUserDto);
+    return user;
   }
 
-  findAll() {
-    return `This action returns all users`;
+  async findAll() {
+    const users = await this.UserRepository.findAll();
+    return users;
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async findOne(id: number) {
+    const users = await this.UserRepository.findByPk(id);
+    return users;
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
+  async update(id: number, updateUserDto: UpdateUserDto) {
+    const [affected, [updatedUser]] = await this.UserRepository.update(
+      updateUserDto,
+      { where: { id }, returning: true },
+    );
+
+    if (!affected) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return updatedUser;
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: number) {
+    const deleted = await this.UserRepository.destroy({ where: { id } });
+
+    if (!deleted) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
+    return { deleted: true };
   }
 }
