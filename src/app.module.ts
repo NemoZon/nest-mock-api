@@ -7,6 +7,7 @@ import { User } from './users/entities/user.entity';
 import { TestModule } from './test/test.module';
 import { RoleModule } from './role/role.module';
 import { Role } from './role/entities/role.entity';
+import { PermissionsModule } from './permissions/permissions.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { Role } from './role/entities/role.entity';
     TestModule,
     UsersModule,
     RoleModule,
+    PermissionsModule,
   ],
 })
 export class AppModule {}
