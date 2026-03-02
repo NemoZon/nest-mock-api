@@ -9,6 +9,7 @@ async function bootstrap() {
     .setTitle('Nest-mock-api')
     .setDescription('Mock API playground')
     .setVersion('1.0.0')
+    .addBearerAuth()
     .build();
 
   const document = SwaggerModule.createDocument(app, config);

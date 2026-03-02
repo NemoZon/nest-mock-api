@@ -24,6 +24,15 @@ docker compose up -d db && npm run start:dev
    - user: postgres
    - password: root
    - database: nest-mock-api
-4. Run migrations: `npm run migration:up`
-5. Start API: `npm run start:dev`
-6. To stop: `docker compose down` (data is kept in the `db-data` volume).
+4. Set `JWT_SECRET` and `JWT_EXPIRES_IN` in `.env`.
+5. Run migrations: `npm run migration:up`
+6. Start API: `npm run start:dev`
+7. To stop: `docker compose down` (data is kept in the `db-data` volume).
+
+## JWT auth
+
+1. Create or use existing user (`POST /users`).
+2. Login: `POST /auth/login` with `email` and `password`.
+3. Use returned token in header:
+   - `Authorization: Bearer <accessToken>`
+4. `POST /roles` now requires a valid JWT token.

@@ -1,4 +1,5 @@
 import {
+  UseGuards,
   Controller,
   Get,
   Post,
@@ -11,14 +12,17 @@ import { RoleService } from './role.service';
 import { CreateRoleDto } from './dto/create-role.dto';
 import { UpdateRoleDto } from './dto/update-role.dto';
 import {
+  ApiBearerAuth,
   ApiCreatedResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiParam,
   ApiTags,
+  ApiUnauthorizedResponse,
 } from '@nestjs/swagger';
 import { Role } from './entities/role.entity';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 
 @ApiTags('Roles')
 @Controller('roles')
@@ -27,6 +31,9 @@ export class RoleController {
 
   @ApiOperation({ summary: 'Create role' })
   @ApiCreatedResponse({ type: Role, description: 'Role created' })
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({ description: 'JWT token is missing or invalid' })
+  @UseGuards(JwtAuthGuard)
   @Post()
   async create(@Body() createRoleDto: CreateRoleDto) {
     return await this.roleService.create(createRoleDto);
