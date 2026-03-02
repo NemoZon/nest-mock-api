@@ -41,6 +41,9 @@ export class RoleController {
 
   @ApiOperation({ summary: 'Get all roles' })
   @ApiOkResponse({ type: [Role] })
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({ description: 'JWT token is missing or invalid' })
+  @UseGuards(JwtAuthGuard)
   @Get()
   async findAll() {
     return await this.roleService.findAll();
@@ -50,6 +53,9 @@ export class RoleController {
   @ApiParam({ name: 'id', type: Number })
   @ApiOkResponse({ type: Role })
   @ApiNotFoundResponse({ description: 'Role not found' })
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({ description: 'JWT token is missing or invalid' })
+  @UseGuards(JwtAuthGuard)
   @Get(':id')
   async findOne(@Param('id') id: string) {
     return await this.roleService.findOne(+id);
@@ -59,6 +65,9 @@ export class RoleController {
   @ApiParam({ name: 'id', type: Number })
   @ApiOkResponse({ type: Role })
   @ApiNotFoundResponse({ description: 'Role not found' })
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({ description: 'JWT token is missing or invalid' })
+  @UseGuards(JwtAuthGuard)
   @Patch(':id')
   async update(@Param('id') id: string, @Body() updateRoleDto: UpdateRoleDto) {
     return await this.roleService.update(+id, updateRoleDto);
@@ -68,6 +77,9 @@ export class RoleController {
   @ApiParam({ name: 'id', type: Number })
   @ApiOkResponse({ schema: { example: { deleted: true } } })
   @ApiNotFoundResponse({ description: 'Role not found' })
+  @ApiBearerAuth()
+  @ApiUnauthorizedResponse({ description: 'JWT token is missing or invalid' })
+  @UseGuards(JwtAuthGuard)
   @Delete(':id')
   async remove(@Param('id') id: string) {
     return await this.roleService.remove(+id);
