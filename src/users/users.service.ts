@@ -8,22 +8,25 @@ import { InjectModel } from '@nestjs/sequelize';
 export class UsersService {
   constructor(@InjectModel(User) private UserRepository: typeof User) {}
 
-  async create(createUserDto: CreateUserDto) {
-    const user = await this.UserRepository.create(createUserDto);
+  create(createUserDto: CreateUserDto): Promise<User> {
+    return this.UserRepository.create(createUserDto);
+  }
+
+  findAll(): Promise<User[]> {
+    return this.UserRepository.findAll();
+  }
+
+  async findOne(id: number): Promise<User> {
+    const user = await this.UserRepository.findByPk(id);
+
+    if (!user) {
+      throw new NotFoundException(`User with id ${id} not found`);
+    }
+
     return user;
   }
 
-  async findAll() {
-    const users = await this.UserRepository.findAll();
-    return users;
-  }
-
-  async findOne(id: number) {
-    const users = await this.UserRepository.findByPk(id);
-    return users;
-  }
-
-  async update(id: number, updateUserDto: UpdateUserDto) {
+  async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
     const [affected, [updatedUser]] = await this.UserRepository.update(
       updateUserDto,
       { where: { id }, returning: true },
@@ -36,7 +39,7 @@ export class UsersService {
     return updatedUser;
   }
 
-  async remove(id: number) {
+  async remove(id: number): Promise<{ deleted: true }> {
     const deleted = await this.UserRepository.destroy({ where: { id } });
 
     if (!deleted) {

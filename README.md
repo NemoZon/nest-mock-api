@@ -1,3 +1,10 @@
+## Run project
+
+```
+docker compose up -d db && npm run start:dev
+```
+
+
 ## Nest aliases
 
 > To quickly create a CRUD controller with built-in validation, you can use the CLI's CRUD generator:
@@ -13,7 +20,7 @@
 2. From the repo root run: `docker compose up -d db`
 3. Connect using the default creds already wired in `src/app.module.ts`:
    - host: localhost
-   - port: 5432
+   - port: 5433
    - user: postgres
    - password: root
    - database: nest-mock-api

@@ -5,6 +5,7 @@ import { ConfigModule } from '@nestjs/config';
 import { Dialect } from 'sequelize';
 import { User } from './users/entities/user.entity';
 import { TestModule } from './test/test.module';
+import { RoleModule } from './role/role.module';
 
 @Module({
   imports: [
@@ -23,6 +24,7 @@ import { TestModule } from './test/test.module';
     }),
     TestModule,
     UsersModule,
+    RoleModule,
   ],
 })
 export class AppModule {}
