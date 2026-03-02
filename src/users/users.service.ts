@@ -3,13 +3,25 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { InjectModel } from '@nestjs/sequelize';
+import { Role } from 'src/role/entities/role.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(@InjectModel(User) private UserRepository: typeof User) {}
+  constructor(
+    @InjectModel(User) private UserRepository: typeof User,
+    @InjectModel(Role) private readonly RoleRepository: typeof Role,
+  ) {}
 
-  create(createUserDto: CreateUserDto): Promise<User> {
-    return this.UserRepository.create(createUserDto);
+  async create(createUserDto: CreateUserDto): Promise<User> {
+    const role: Role | null = await this.RoleRepository.findByPk(
+      createUserDto.roleId,
+    );
+    if (!role) {
+      throw new NotFoundException(
+        `Role with id ${createUserDto.roleId} not found`,
+      );
+    }
+    return await this.UserRepository.create(createUserDto);
   }
 
   findAll(): Promise<User[]> {
@@ -27,6 +39,17 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
+    if (updateUserDto.roleId) {
+      const role: Role | null = await this.RoleRepository.findByPk(
+        updateUserDto.roleId,
+      );
+      if (!role) {
+        throw new NotFoundException(
+          `Role with id ${updateUserDto.roleId} not found`,
+        );
+      }
+    }
+
     const [affected, [updatedUser]] = await this.UserRepository.update(
       updateUserDto,
       { where: { id }, returning: true },

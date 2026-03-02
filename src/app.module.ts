@@ -6,6 +6,7 @@ import { Dialect } from 'sequelize';
 import { User } from './users/entities/user.entity';
 import { TestModule } from './test/test.module';
 import { RoleModule } from './role/role.module';
+import { Role } from './role/entities/role.entity';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { RoleModule } from './role/role.module';
       username: process.env.DB_USERNAME,
       password: process.env.DB_PASSWORD,
       database: process.env.DB_NAME,
-      models: [User],
+      models: [User, Role],
       autoLoadModels: true,
     }),
     TestModule,

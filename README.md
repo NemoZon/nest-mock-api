@@ -24,4 +24,6 @@ docker compose up -d db && npm run start:dev
    - user: postgres
    - password: root
    - database: nest-mock-api
-4. To stop: `docker compose down` (data is kept in the `db-data` volume).
+4. Run migrations: `npm run migration:up`
+5. Start API: `npm run start:dev`
+6. To stop: `docker compose down` (data is kept in the `db-data` volume).

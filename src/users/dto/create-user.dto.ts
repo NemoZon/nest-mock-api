@@ -16,4 +16,7 @@ export class CreateUserDto {
 
   @ApiProperty({ example: 25, required: false, description: 'Age in years' })
   readonly age: number;
+
+  @ApiProperty({ example: 1, required: true, description: 'Role id' })
+  readonly roleId: number;
 }

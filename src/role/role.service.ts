@@ -8,7 +8,7 @@ import { InjectModel } from '@nestjs/sequelize';
 export class RoleService {
   constructor(@InjectModel(Role) private UserRepository: typeof Role) {}
 
-  create(createRoleDto: CreateRoleDto): Promise<Role> {
+  async create(createRoleDto: CreateRoleDto): Promise<Role> {
     return this.UserRepository.create(createRoleDto);
   }
 

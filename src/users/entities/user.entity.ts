@@ -1,11 +1,20 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, DataType, Model, Table } from 'sequelize-typescript';
+import {
+  BelongsTo,
+  Column,
+  DataType,
+  ForeignKey,
+  Model,
+  Table,
+} from 'sequelize-typescript';
+import { Role } from '../../role/entities/role.entity';
 
 interface UserCreationAttrs {
   email: string;
   password: string;
   name?: string;
   age?: number;
+  roleId: number;
 }
 
 @Table({ tableName: 'users' })
@@ -59,4 +68,19 @@ export class User extends Model<User, UserCreationAttrs> {
     type: DataType.INTEGER,
   })
   declare age: number;
+
+  @ApiProperty({
+    example: 1,
+    required: true,
+    description: 'Role id (FK to roles.id)',
+  })
+  @ForeignKey(() => Role)
+  @Column({
+    type: DataType.INTEGER,
+    allowNull: false,
+  })
+  declare roleId: number;
+
+  @BelongsTo(() => Role)
+  declare role: Role;
 }
