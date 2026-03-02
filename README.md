@@ -25,6 +25,7 @@ docker compose up -d db && npm run start:dev
    - password: root
    - database: nest-mock-api
 4. Set `JWT_SECRET` and `JWT_EXPIRES_IN` in `.env`.
+   - optional: `PASSWORD_SALT_ROUNDS` (default `10`)
 5. Run migrations: `npm run migration:up`
 6. Start API: `npm run start:dev`
 7. To stop: `docker compose down` (data is kept in the `db-data` volume).

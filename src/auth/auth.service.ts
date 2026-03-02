@@ -5,6 +5,7 @@ import { User } from '../users/entities/user.entity';
 import { LoginDto } from './dto/login.dto';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { Role } from '../role/entities/role.entity';
+import { verifyPassword } from '../common/password.util';
 
 @Injectable()
 export class AuthService {
@@ -19,7 +20,12 @@ export class AuthService {
       include: [Role],
     });
 
-    if (!user || user.password !== dto.password) {
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const isValidPassword = await verifyPassword(dto.password, user.password);
+    if (!isValidPassword) {
       throw new UnauthorizedException('Invalid credentials');
     }
 

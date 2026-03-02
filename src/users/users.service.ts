@@ -4,6 +4,7 @@ import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import { InjectModel } from '@nestjs/sequelize';
 import { Role } from 'src/role/entities/role.entity';
+import { hashPassword } from '../common/password.util';
 
 @Injectable()
 export class UsersService {
@@ -21,7 +22,13 @@ export class UsersService {
         `Role with id ${createUserDto.roleId} not found`,
       );
     }
-    return await this.UserRepository.create(createUserDto);
+
+    const hashedPassword = await hashPassword(createUserDto.password);
+
+    return await this.UserRepository.create({
+      ...createUserDto,
+      password: hashedPassword,
+    });
   }
 
   findAll(): Promise<User[]> {
@@ -39,7 +46,7 @@ export class UsersService {
   }
 
   async update(id: number, updateUserDto: UpdateUserDto): Promise<User> {
-    if (updateUserDto.roleId) {
+    if (updateUserDto.roleId !== undefined) {
       const role: Role | null = await this.RoleRepository.findByPk(
         updateUserDto.roleId,
       );
@@ -50,8 +57,13 @@ export class UsersService {
       }
     }
 
+    const updatePayload = { ...updateUserDto };
+    if (updateUserDto.password) {
+      updatePayload.password = await hashPassword(updateUserDto.password);
+    }
+
     const [affected, [updatedUser]] = await this.UserRepository.update(
-      updateUserDto,
+      updatePayload,
       { where: { id }, returning: true },
     );
 
